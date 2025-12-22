@@ -5,21 +5,51 @@
     <el-table :data="orders" stripe style="width: 100%">
       <el-table-column prop="id" label="ID" width="80" />
       <el-table-column prop="orderNo" label="订单号" width="180" />
+
+      <!-- 乘客信息列 - 悬浮显示ID -->
       <el-table-column label="乘客信息">
         <template #default="scope">
-          <div v-if="scope.row.passenger">
-            {{ scope.row.passenger.nickname }} ({{ scope.row.passenger.username }})
-          </div>
+          <el-tooltip
+              v-if="scope.row.passengerName"
+              :content="`乘客ID: ${scope.row.passengerId || '暂无'}`"
+              placement="top"
+          >
+            <div class="hover-show">
+              {{ scope.row.passengerName }}
+            </div>
+          </el-tooltip>
+          <el-tooltip
+              v-else
+              :content="`乘客ID: ${scope.row.passengerId || '暂无'}`"
+              placement="top"
+          >
+            <span style="color: #999">暂无乘客</span>
+          </el-tooltip>
         </template>
       </el-table-column>
+
+      <!-- 司机信息列 - 悬浮显示ID -->
       <el-table-column label="司机信息">
         <template #default="scope">
-          <div v-if="scope.row.driver">
-            {{ scope.row.driver.nickname }} ({{ scope.row.driver.carNumber }})
-          </div>
-          <span v-else style="color: #999">未分配</span>
+          <el-tooltip
+              v-if="scope.row.driverName"
+              :content="`司机ID: ${scope.row.driverId || '暂无'}`"
+              placement="top"
+          >
+            <div class="hover-show">
+              {{ scope.row.driverName }}
+            </div>
+          </el-tooltip>
+          <el-tooltip
+              v-else
+              :content="`司机ID: ${scope.row.driverId || '暂无'}`"
+              placement="top"
+          >
+            <span style="color: #999">未分配</span>
+          </el-tooltip>
         </template>
       </el-table-column>
+
       <el-table-column prop="startAddress" label="出发地" show-overflow-tooltip />
       <el-table-column prop="endAddress" label="目的地" show-overflow-tooltip />
       <el-table-column prop="actualAmount" label="实付金额" width="100">
@@ -96,5 +126,17 @@ export default {
 <style scoped>
 .order-management {
   padding: 20px;
+}
+
+/* 添加鼠标悬停样式 */
+.hover-show {
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.hover-show:hover {
+  color: #409eff;
+  text-decoration: underline;
+  text-decoration-style: dotted;
 }
 </style>

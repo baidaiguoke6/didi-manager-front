@@ -36,11 +36,6 @@
               <el-table-column prop="username" label="账号" min-width="100" show-overflow-tooltip />
               <el-table-column prop="nickname" label="昵称" min-width="100" show-overflow-tooltip />
               <el-table-column prop="phone" label="手机号" min-width="120" show-overflow-tooltip />
-              <el-table-column prop="balance" label="余额" width="100" align="right">
-                <template #default="scope">
-                  <span class="balance">¥{{ scope.row.balance || 0 }}</span>
-                </template>
-              </el-table-column>
               <el-table-column prop="status" label="状态" width="90" align="center">
                 <template #default="scope">
                   <el-tag
@@ -116,18 +111,24 @@
                 class="user-table"
                 v-loading="loading"
                 :default-sort="{ prop: 'id', order: 'ascending' }"
+                max-height="calc(100% - 40px)"
             >
               <el-table-column prop="id" label="ID" width="80" align="center" sortable />
               <el-table-column prop="username" label="账号" min-width="100" show-overflow-tooltip />
               <el-table-column prop="nickname" label="昵称" min-width="100" show-overflow-tooltip />
               <el-table-column prop="phone" label="手机号" min-width="120" show-overflow-tooltip />
               <el-table-column prop="carNumber" label="车牌号" min-width="100" show-overflow-tooltip />
-              <el-table-column prop="carType" label="车型" min-width="80" show-overflow-tooltip />
-              <el-table-column prop="balance" label="余额" width="100" align="right">
+              <el-table-column prop="driverCountsToday" label="今日盈利" width="100" align="right">
                 <template #default="scope">
-                  <span class="balance">¥{{ scope.row.balance || 0 }}</span>
+                  <span class="balance">¥{{ scope.row.driverCountsToday || 0 }}</span>
                 </template>
               </el-table-column>
+              <el-table-column prop="driverAllCounts" label="总盈利" width="100" align="right">
+                <template #default="scope">
+                  <span class="balance">¥{{ scope.row.driverAllCounts || 0 }}</span>
+                </template>
+              </el-table-column>
+
               <el-table-column prop="status" label="状态" width="90" align="center">
                 <template #default="scope">
                   <el-tag
@@ -217,10 +218,10 @@
           <span class="label">手机号：</span>
           <span class="value">{{ selectedPassenger.phone || '未设置' }}</span>
         </div>
-        <div class="detail-item">
-          <span class="label">余额：</span>
-          <span class="value balance">¥{{ selectedPassenger.balance || 0 }}</span>
-        </div>
+<!--        <div class="detail-item">-->
+<!--          <span class="label">账户余额：</span>-->
+<!--          <span class="value balance">¥{{ selectedPassenger.balance || 0 }}</span>-->
+<!--        </div>-->
         <div class="detail-item">
           <span class="label">状态：</span>
           <el-tag :type="selectedPassenger.status === 1 ? 'success' : 'danger'">
@@ -263,12 +264,12 @@
             <span class="value">{{ selectedDriver.carNumber || '未设置' }}</span>
           </div>
           <div class="detail-item">
-            <span class="label">车型：</span>
-            <span class="value">{{ selectedDriver.carType || '未设置' }}</span>
+            <span class="label">今日盈利：</span>
+            <span class="value balance">¥{{ selectedDriver.driverCountsToday || 0 }}</span>
           </div>
           <div class="detail-item">
-            <span class="label">余额：</span>
-            <span class="value balance">¥{{ selectedDriver.balance || 0 }}</span>
+            <span class="label">总盈利：</span>
+            <span class="value balance">¥{{ selectedDriver.driverAllCounts || 0 }}</span>
           </div>
           <div class="detail-item">
             <span class="label">状态：</span>
@@ -326,6 +327,8 @@ export default {
           enabling0: false,
           enabling1: false
         }))
+        // 在加载数据时添加调试
+        // console.log('司机数据:', driverRes.data)
       } catch (error) {
         ElMessage.error('获取用户数据失败')
         console.error('获取用户数据失败:', error)
@@ -525,8 +528,10 @@ export default {
 .user-management {
   padding: 20px;
   background: #f5f7fa;
-  min-height: 100%;
-  overflow-x: hidden; /* 防止水平滚动 */
+  height: calc(100vh - 40px);
+  overflow: hidden;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .page-header {
@@ -590,6 +595,9 @@ export default {
 
 .tab-content {
   padding: 20px;
+  height: calc(100% - 120px);
+  overflow: hidden;
+
 }
 
 .tab-header {
@@ -647,8 +655,10 @@ export default {
 .table-container {
   width: 100%;
   overflow-x: auto;
+  overflow-y: hidden;
   border-radius: 4px;
   border: 1px solid #ebeef5;
+  height: 100%;
 }
 
 .user-table {

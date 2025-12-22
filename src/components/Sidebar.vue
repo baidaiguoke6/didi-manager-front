@@ -23,13 +23,20 @@
         <el-icon><Document /></el-icon>
         <span>订单管理</span>
       </el-menu-item>
+      <el-menu-item index="/cloud-sync">
+        <el-icon><Cloudy /></el-icon>
+        <span>云数据同步</span>
+      </el-menu-item>
     </el-menu>
   </div>
 </template>
 
 <script>
+import {Cloudy, Document, Odometer, User} from "@element-plus/icons-vue";
+
 export default {
-  name: 'Sidebar'
+  name: 'Sidebar',
+  components: {Odometer, User, Document, Cloudy}
 }
 </script>
 

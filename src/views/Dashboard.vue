@@ -417,7 +417,7 @@ export default {
 }
 
 .chart-card {
-  height: 320px;
+  height: 370px;
   border-radius: 12px;
   overflow: hidden;
 }

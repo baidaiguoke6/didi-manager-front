@@ -4,6 +4,7 @@ import Layout from '@/components/Layout.vue'
 import Dashboard from '@/views/Dashboard.vue'
 import UserManagement from '@/views/UserManagement.vue'
 import OrderManagement from '@/views/OrderManagement.vue'
+import CloudDataSync from "@/views/CloudDataSync.vue";
 
 const routes = [
     {
@@ -30,6 +31,11 @@ const routes = [
                 path: 'orders',
                 name: 'OrderManagement',
                 component: OrderManagement
+            },
+            {
+                path: 'cloud-sync',
+                name: 'CloudDataSync',
+                component: CloudDataSync
             }
         ]
     }
