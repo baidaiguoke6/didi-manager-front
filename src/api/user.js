@@ -7,11 +7,11 @@ export const userApi = {
     // 管理员注册
     register: (data) => request.post('/admin/register', null, { params: data }),
 
-    // 获取乘客列表
-    getPassengers: () => request.get('/passenger/list'),
+    // 获取乘客列表（分页）
+    getPassengers: (params) => request.get('/passenger/list', { params }),
 
-    // 获取司机列表
-    getDrivers: () => request.get('/driver/list'),
+    // 获取司机列表（分页）
+    getDrivers: (params) => request.get('/driver/list', { params }),
 
     // 更新乘客状态
     updatePassengerStatus: (id, status) => request.put(`/passenger/${id}/status`, null, { params: { status } }),

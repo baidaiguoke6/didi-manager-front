@@ -1,8 +1,9 @@
 import request from './request'
 
 export const orderApi = {
-    // 获取订单列表
-    getOrders: () => request.get('/order/list'),
+    // 获取订单列表（分页） - 添加排序参数
+    getOrders: (page = 0, size = 20, sort = 'createTime', direction = 'desc') =>
+        request.get(`/order/list?page=${page}&size=${size}&sort=${sort}&direction=${direction}`),
 
     // 获取今日订单数
     getTodayOrderCount: () => request.get('/order/count/today'),

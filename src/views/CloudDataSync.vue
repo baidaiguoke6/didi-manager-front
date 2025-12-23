@@ -100,21 +100,26 @@ const initWechatCloud = () => {
   })
 }
 
-// 查询集合数据
-const queryCollection = (cloudInstance, collectionName) => {
-  return new Promise((resolve, reject) => {
-    const db = cloudInstance.database()
-    db.collection(collectionName).get({
-      success: (res) => {
-        addLog(`✅ ${collectionName} 数据获取成功: ${res.data.length} 条`, 'success')
-        resolve(res.data)
-      },
-      fail: (res) => {
-        addLog(`❌❌ ${collectionName} 数据获取失败: ${JSON.stringify(res)}`, 'error')
-        reject(new Error(res.errMsg || '获取数据失败'))
-      }
-    })
-  })
+const queryCollection = async (cloudInstance, collectionName, pageSize = 100) => {
+  const db = cloudInstance.database()
+  let allData = []
+  let lastTime = 0
+
+  while (true) {
+    const res = await db.collection(collectionName)
+        .where({ createTime: db.command.gt(lastTime) })
+        .orderBy('createTime', 'asc')
+        .limit(pageSize)
+        .get()
+
+    if (res.data.length === 0) break
+
+    allData = allData.concat(res.data)
+    lastTime = res.data[res.data.length - 1].createTime
+  }
+
+  addLog(`✅ ${collectionName} 数据获取完成: ${allData.length} 条`, 'success')
+  return allData
 }
 
 // 转换数据格式以适应后端实体
@@ -123,10 +128,10 @@ const transformDataForBackend = (originalData, dataType) => {
   // console.log("这是从小程序获取的所有原始数据：", originalData)
   // console.log("JSON格式的原始数据：", JSON.stringify(originalData, null, 2))
 
-  // 或者详细打印每个对象
-  originalData.forEach((item, index) => {
-    console.log(`${dataType} ${index}:`, JSON.stringify(item, null, 2))
-  })
+  // // 或者详细打印每个对象
+  // originalData.forEach((item, index) => {
+  //   console.log(`${dataType} ${index}:`, JSON.stringify(item, null, 2))
+  // })
 
   try {
     let transformedData = []
@@ -239,7 +244,7 @@ const startSync = async () => {
 
   } catch (error) {
     addLog(`❌❌ 同步失败: ${error.message}`, 'error')
-    ElMessage.error(`同步失败222: ${error.message}`)
+    ElMessage.error(`同步失败: ${error.message}`)
   } finally {
     syncLoading.value = false
   }
